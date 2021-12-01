@@ -17,8 +17,22 @@ class EmojiMemoryGame: ObservableObject{
         }
     }
     
+    static func createColor() -> Color {
+        switch theme.choosedTheme.color{
+        case "red":
+            return Color.red
+        case "blue":
+            return Color.blue
+        case "green":
+            return Color.green
+        default:
+            return Color.black
+        }
+    }
+    
     @Published private var model: MemoryGame<String> = createMemoryGame(emojis: EmojiMemoryGame.theme.choosedTheme.emojis)
-        
+    @Published var themeColor: Color = createColor()
+    
     
     var cards: Array<MemoryGame<String>.Card>{
         return model.cards
@@ -32,6 +46,7 @@ class EmojiMemoryGame: ObservableObject{
     
     func newGame(){
         EmojiMemoryGame.theme.createNewTheme()
+        themeColor = EmojiMemoryGame.createColor()
         model = EmojiMemoryGame.createMemoryGame(emojis: EmojiMemoryGame.theme.choosedTheme.emojis)
         print("Started new game")
     }

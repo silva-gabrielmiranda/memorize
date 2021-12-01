@@ -18,6 +18,7 @@ struct ContentView: View {
                 Text("New Game")
                     .bold()
                     .foregroundColor(.blue)
+                    .padding(.top)
                     .padding(.horizontal)
                     .onTapGesture {
                         viewModel.newGame()
@@ -34,7 +35,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .foregroundColor(.red)
+            .foregroundColor(viewModel.themeColor)
         }
         .padding(.horizontal)
     }
@@ -67,6 +68,7 @@ struct ContentView_Previews: PreviewProvider {
         let game = EmojiMemoryGame()
         Group {
             ContentView(viewModel: game)
+.previewInterfaceOrientation(.portrait)
         }
     }
 }
