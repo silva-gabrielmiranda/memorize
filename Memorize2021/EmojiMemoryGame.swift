@@ -9,16 +9,15 @@ import SwiftUI
 
 class EmojiMemoryGame: ObservableObject{
     
-    static var theme: GameTheme = GameTheme()
     
-    static func createMemoryGame(emojis: Array<String>) -> MemoryGame<String>{
-        MemoryGame<String>(numberOfPairsOfCards: 5){ pairIndex in //Função enviada POR PARAMETRO para definir o valor do content do card
+    static func createMemoryGame(emojis: Array<String>, numberOfPairs: Int) -> MemoryGame<String>{
+        MemoryGame<String>(numberOfPairsOfCards: numberOfPairs){ pairIndex in //Função enviada POR PARAMETRO para definir o valor do content do card
             emojis[pairIndex]
         }
     }
     
-    static func createColor() -> Color {
-        switch theme.choosedTheme.color{
+    func createColor(color: String) -> Color {
+        switch color{
         case "red":
             return Color.red
         case "blue":
@@ -30,12 +29,25 @@ class EmojiMemoryGame: ObservableObject{
         }
     }
     
-    @Published private var model: MemoryGame<String> = createMemoryGame(emojis: EmojiMemoryGame.theme.choosedTheme.emojis)
-    @Published var themeColor: Color = createColor()
+    static func createGameTheme() -> GameTheme{
+        GameTheme()
+    }
     
+    static var gameTheme: GameTheme = createGameTheme()
+    @Published private var theme = gameTheme.theme
+    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(emojis: EmojiMemoryGame.gameTheme.theme.emojis.shuffled(), numberOfPairs:  EmojiMemoryGame.gameTheme.theme.numberOfPairsOfCards)
+        
     
     var cards: Array<MemoryGame<String>.Card>{
         return model.cards
+    }
+    
+    var score: Int{
+        return model.score
+    }
+    
+    var themeColor: Color{
+        return createColor(color: theme.color)
     }
     
     // MARK: - Intents
@@ -45,9 +57,8 @@ class EmojiMemoryGame: ObservableObject{
     }
     
     func newGame(){
-        EmojiMemoryGame.theme.createNewTheme()
-        themeColor = EmojiMemoryGame.createColor()
-        model = EmojiMemoryGame.createMemoryGame(emojis: EmojiMemoryGame.theme.choosedTheme.emojis)
+        theme = EmojiMemoryGame.createGameTheme().theme
+        model = EmojiMemoryGame.createMemoryGame(emojis: theme.emojis.shuffled(), numberOfPairs: theme.numberOfPairsOfCards)
         print("Started new game")
     }
 }

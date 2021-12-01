@@ -36,6 +36,7 @@ struct ContentView: View {
                 }
             }
             .foregroundColor(viewModel.themeColor)
+            Text("\(viewModel.score)").bold().font(.largeTitle)
         }
         .padding(.horizontal)
     }
